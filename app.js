@@ -1,3 +1,5 @@
+const premiumStyles=document.createElement('link');premiumStyles.rel='stylesheet';premiumStyles.href='premium.css';document.head.appendChild(premiumStyles);
+
 const pages=document.querySelectorAll('.page');
 const navItems=document.querySelectorAll('.nav-item[data-page]');
 const title=document.getElementById('pageTitle');
@@ -68,11 +70,18 @@ let glowFrame;
 document.addEventListener('pointermove',e=>{if(window.innerWidth<900)return;glow.classList.add('visible');cancelAnimationFrame(glowFrame);glowFrame=requestAnimationFrame(()=>{glow.style.left=`${e.clientX}px`;glow.style.top=`${e.clientY}px`});const hero=document.querySelector('.hero-orbit');if(hero){const rect=hero.getBoundingClientRect();const x=(e.clientX-(rect.left+rect.width/2))/rect.width;const y=(e.clientY-(rect.top+rect.height/2))/rect.height;hero.style.transform=`translate(${x*8}px,${y*8}px)`}});
 document.addEventListener('pointerleave',()=>glow.classList.remove('visible'));
 
-// Give elevated cards a subtle pointer tilt on desktop.
-document.querySelectorAll('.project-card,.agent-card,.lab-grid article,.quick-grid>button').forEach(card=>{card.addEventListener('pointermove',e=>{if(window.innerWidth<900)return;const r=card.getBoundingClientRect();const rx=((e.clientY-r.top)/r.height-.5)*-2;const ry=((e.clientX-r.left)/r.width-.5)*2;card.style.transform=`translateY(-3px) rotateX(${rx}deg) rotateY(${ry}deg)`});card.addEventListener('pointerleave',()=>card.style.transform='')});
+// Elevated-card tilt.
+document.querySelectorAll('.project-card,.agent-card,.lab-grid article,.quick-grid>button').forEach(card=>{card.addEventListener('pointermove',e=>{if(window.innerWidth<900)return;const r=card.getBoundingClientRect();const rx=((e.clientY-r.top)/r.height-.5)*-1.7;const ry=((e.clientX-r.left)/r.width-.5)*1.7;card.style.transform=`translateY(-4px) rotateX(${rx}deg) rotateY(${ry}deg)`});card.addEventListener('pointerleave',()=>card.style.transform='')});
 
-// Animate numbers/progress once when they enter the viewport.
+// Reveal cards when they enter the viewport.
 const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('revealed');revealObserver.unobserve(entry.target)}}),{threshold:.15});
 document.querySelectorAll('.panel,.project-card,.agent-card,.lab-grid article,.task-card').forEach(el=>revealObserver.observe(el));
+
+// Premium click ripple on important controls without changing logo artwork.
+document.querySelectorAll('.primary-button,.ghost-button,.quick-grid>button,.nav-item,.command-button,.prompt-grid button,.suggestion-chips button').forEach(button=>{button.style.position=button.style.position||'relative';button.style.overflow='hidden';button.addEventListener('pointerdown',e=>{const r=button.getBoundingClientRect();const dot=document.createElement('span');dot.className='premium-ripple';dot.style.left=`${e.clientX-r.left}px`;dot.style.top=`${e.clientY-r.top}px`;dot.style.width=dot.style.height='34px';button.appendChild(dot);setTimeout(()=>dot.remove(),680)})});
+
+// Add a subtle scroll state to the topbar.
+const topbar=document.querySelector('.topbar');
+window.addEventListener('scroll',()=>{if(!topbar)return;topbar.style.boxShadow=window.scrollY>16?'0 10px 28px rgba(31,41,55,.045)':'none'},{passive:true});
 
 refreshIcons();
