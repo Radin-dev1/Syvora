@@ -1,131 +1,245 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Syvora — one AI workspace for chat, projects, building, coding, and agents." />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Syvora — one intelligent workspace for chat, projects, code, teams and AI.">
+  <meta name="theme-color" content="#f7f7f5">
   <title>Syvora — AI Workspace</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="page-glow glow-one"></div><div class="page-glow glow-two"></div>
-  <div class="app-shell">
-    <aside class="sidebar">
-      <div class="brand-row">
-        <div class="syvora-logo" aria-label="Syvora logo"><span class="hub"></span><span class="ray r1"></span><span class="ray r2"></span><span class="ray r3"></span><span class="ray r4"></span><span class="node n1"></span><span class="node n2"></span><span class="node n3"></span><span class="node n4"></span></div>
-        <span class="brand-name">Syvora</span>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="syvora-mark" aria-label="Syvora logo">
+        <span class="logo-core"></span>
+        <span class="logo-line l1"></span><span class="logo-line l2"></span><span class="logo-line l3"></span><span class="logo-line l4"></span>
+        <span class="logo-line l5"></span><span class="logo-line l6"></span><span class="logo-line l7"></span><span class="logo-line l8"></span>
+        <span class="logo-dot d1 blue"></span><span class="logo-dot d2"></span><span class="logo-dot d3"></span><span class="logo-dot d4 blue"></span>
+        <span class="logo-dot d5"></span><span class="logo-dot d6 blue"></span><span class="logo-dot d7"></span><span class="logo-dot d8 blue"></span>
       </div>
+      <div class="brand-copy"><strong>Syvora</strong><span>Personal</span></div>
+      <button class="icon-button sidebar-toggle" id="sidebarToggle" title="Collapse sidebar"><i data-lucide="panel-left-close"></i></button>
+    </div>
 
-      <button class="workspace-picker"><span class="workspace-avatar">S</span><span><b>Syvora Workspace</b><small>Personal</small></span><i data-lucide="chevrons-up-down"></i></button>
-      <button class="command-button" id="commandButton"><i data-lucide="search"></i><span>Search Syvora</span><kbd>⌘ K</kbd></button>
+    <button class="search-button" id="commandButton"><i data-lucide="search"></i><span>Search Syvora</span><kbd>⌘ K</kbd></button>
 
-      <nav class="nav">
-        <span class="nav-label">Workspace</span>
-        <button class="nav-item active" data-page="home"><i data-lucide="house"></i><span>Home</span></button>
-        <button class="nav-item" data-page="ai"><i data-lucide="sparkles"></i><span>AI Chat</span><span class="nav-badge">AI</span></button>
+    <nav class="nav">
+      <div class="nav-group">
+        <button class="nav-item active" data-page="home"><i data-lucide="home"></i><span>Home</span></button>
+        <button class="nav-item" data-page="ai"><i data-lucide="sparkles"></i><span>AI chat</span><span class="nav-badge">New</span></button>
         <button class="nav-item" data-page="projects"><i data-lucide="layout-dashboard"></i><span>Projects</span></button>
-        <button class="nav-item" data-page="chat"><i data-lucide="messages-square"></i><span>Team Chat</span></button>
-        <span class="nav-label nav-label-spaced">Create</span>
+        <button class="nav-item" data-page="chat"><i data-lucide="messages-square"></i><span>Team chat</span><span class="unread-dot"></span></button>
+      </div>
+      <div class="nav-label">Create</div>
+      <div class="nav-group">
         <button class="nav-item" data-page="build"><i data-lucide="wand-sparkles"></i><span>Build</span></button>
         <button class="nav-item" data-page="code"><i data-lucide="code-2"></i><span>Code</span></button>
         <button class="nav-item" data-page="agents"><i data-lucide="bot"></i><span>Agents</span></button>
         <button class="nav-item" data-page="labs"><i data-lucide="flask-conical"></i><span>Labs</span></button>
-        <span class="nav-label nav-label-spaced">Manage</span>
+      </div>
+      <div class="nav-label">Workspace</div>
+      <div class="nav-group">
         <button class="nav-item" data-page="files"><i data-lucide="folder"></i><span>Files</span></button>
         <button class="nav-item" data-page="automations"><i data-lucide="workflow"></i><span>Automations</span></button>
-      </nav>
-
-      <div class="sidebar-bottom">
-        <div class="usage-card"><div><span>Monthly usage</span><b>68%</b></div><div class="usage-track"><i></i></div><small>13.6k of 20k credits</small></div>
-        <button class="profile-card"><span class="avatar">R</span><span><b>Radin</b><small>Free workspace</small></span><i data-lucide="more-horizontal"></i></button>
       </div>
-    </aside>
+    </nav>
 
-    <main class="main">
-      <header class="topbar">
-        <div class="mobile-brand"><div class="syvora-logo small"><span class="hub"></span><span class="ray r1"></span><span class="ray r2"></span><span class="ray r3"></span><span class="ray r4"></span><span class="node n1"></span><span class="node n2"></span><span class="node n3"></span><span class="node n4"></span></div><b>Syvora</b></div>
-        <div class="page-title-wrap"><span class="crumb">Workspace</span><i data-lucide="chevron-right"></i><b id="pageTitle">Home</b></div>
-        <div class="topbar-actions"><button class="icon-button"><i data-lucide="bell"></i><span class="notification-dot"></span></button><button class="soft-button"><i data-lucide="users"></i> Invite</button><button class="primary-button" data-page-link="build"><i data-lucide="plus"></i> Create</button></div>
-      </header>
+    <div class="sidebar-bottom">
+      <button class="mini-upgrade"><span class="mini-upgrade-icon"><i data-lucide="zap"></i></span><span><b>Syvora Pro</b><small>Unlock more AI power</small></span><i data-lucide="chevron-right"></i></button>
+      <button class="profile-row" data-page-link="settings"><span class="avatar">R</span><span><b>Radin</b><small>Settings & account</small></span><i data-lucide="more-horizontal"></i></button>
+    </div>
+  </aside>
 
-      <div class="content">
-        <section class="page active" id="page-home">
-          <div class="home-hero">
-            <div class="hero-copy">
-              <div class="hero-kicker"><span class="live-dot"></span> Your intelligent workspace</div>
-              <h1>Turn ideas into<br><span>finished work.</span></h1>
-              <p>Chat with AI, plan projects, collaborate with your team, and build products without jumping between tools.</p>
-              <div class="hero-actions"><button class="primary-button large" data-page-link="ai"><i data-lucide="sparkles"></i> Start with AI</button><button class="soft-button large" data-page-link="projects"><i data-lucide="layout-dashboard"></i> Open projects</button></div>
-            </div>
-            <div class="network-stage" aria-hidden="true">
-              <div class="network-halo h1"></div><div class="network-halo h2"></div>
-              <div class="network-core"><div class="syvora-logo giant"><span class="hub"></span><span class="ray r1"></span><span class="ray r2"></span><span class="ray r3"></span><span class="ray r4"></span><span class="node n1"></span><span class="node n2"></span><span class="node n3"></span><span class="node n4"></span></div></div>
-              <div class="float-card fc-one"><span class="float-icon blue"><i data-lucide="message-square"></i></span><div><b>AI Chat</b><small>Ready to help</small></div><span class="online"></span></div>
-              <div class="float-card fc-two"><span class="float-icon violet"><i data-lucide="code-2"></i></span><div><b>Build</b><small>3 apps active</small></div></div>
-              <div class="float-card fc-three"><span class="float-icon green"><i data-lucide="check-circle-2"></i></span><div><b>Projects</b><small>12 tasks today</small></div></div>
-              <div class="float-dot d1"></div><div class="float-dot d2"></div><div class="float-dot d3"></div>
-            </div>
-          </div>
-
-          <div class="home-composer" id="homeComposer">
-            <div class="composer-top"><div class="composer-logo"><i data-lucide="sparkles"></i></div><textarea id="homePrompt" rows="2" placeholder="Ask Syvora anything, or describe what you want to build..."></textarea></div>
-            <div class="composer-bottom"><div class="composer-tools"><button title="Attach"><i data-lucide="paperclip"></i></button><button title="Web search"><i data-lucide="globe-2"></i></button><button title="Voice"><i data-lucide="audio-lines"></i></button></div><div class="composer-right"><select id="homeMode"><option>Normal Chat</option><option>Workspace Chat</option><option>Build Mode</option></select><button class="send-button" id="homeSend"><i data-lucide="arrow-up"></i></button></div></div>
-          </div>
-
-          <div class="quick-actions">
-            <button data-page-link="ai"><span class="qa-icon blue"><i data-lucide="message-circle"></i></span><span><b>Ask anything</b><small>Start a normal AI conversation</small></span><i data-lucide="arrow-up-right"></i></button>
-            <button data-page-link="build"><span class="qa-icon violet"><i data-lucide="wand-sparkles"></i></span><span><b>Build an app</b><small>Describe it and watch it appear</small></span><i data-lucide="arrow-up-right"></i></button>
-            <button data-page-link="projects"><span class="qa-icon green"><i data-lucide="list-checks"></i></span><span><b>Plan a project</b><small>Turn an idea into organized work</small></span><i data-lucide="arrow-up-right"></i></button>
-            <button data-page-link="agents"><span class="qa-icon orange"><i data-lucide="bot"></i></span><span><b>Create an agent</b><small>Give AI a job and tools</small></span><i data-lucide="arrow-up-right"></i></button>
-          </div>
-
-          <div class="section-head"><div><span>OVERVIEW</span><h2>Your workspace today</h2></div><button class="text-button">Customize <i data-lucide="sliders-horizontal"></i></button></div>
-          <div class="bento-grid">
-            <article class="bento-card projects-card"><div class="card-head"><div><span class="card-label">RECENT PROJECTS</span><h3>Continue building</h3></div><button class="round-button" data-page-link="projects"><i data-lucide="arrow-up-right"></i></button></div><div class="project-list">
-              <div class="project-row"><span class="project-mark black">TH</span><div><b>Tournament Hunt</b><small>Website + community</small></div><div class="project-progress"><span>67%</span><i><b style="width:67%"></b></i></div></div>
-              <div class="project-row"><span class="project-mark amber">BX</span><div><b>Bloxy</b><small>AI Roblox builder</small></div><div class="project-progress"><span>42%</span><i><b style="width:42%"></b></i></div></div>
-              <div class="project-row"><span class="project-mark blue">SY</span><div><b>Syvora</b><small>AI workspace</small></div><div class="project-progress"><span>24%</span><i><b style="width:24%"></b></i></div></div>
-            </div></article>
-            <article class="bento-card stat-card"><div class="stat-icon"><i data-lucide="check-check"></i></div><span>Completed today</span><strong>12</strong><small><b>+4</b> from yesterday</small></article>
-            <article class="bento-card stat-card"><div class="stat-icon purple"><i data-lucide="git-commit-horizontal"></i></div><span>Code updates</span><strong>8</strong><small><b>3</b> ready to review</small></article>
-            <article class="bento-card agents-card"><div class="card-head"><div><span class="card-label">AI TEAM</span><h3>Active agents</h3></div><button class="round-button" data-page-link="agents"><i data-lucide="arrow-up-right"></i></button></div><div class="agent-stack"><span class="agent-bubble dev"><i data-lucide="code-2"></i></span><span class="agent-bubble pm"><i data-lucide="clipboard-check"></i></span><span class="agent-bubble res"><i data-lucide="search"></i></span><span class="agent-count">+2</span></div><p>Developer and Project Manager are working right now.</p><div class="agent-status"><span class="online"></span> 2 agents active</div></article>
-            <article class="bento-card task-card"><div class="card-head"><div><span class="card-label">NEXT UP</span><h3>Tasks</h3></div><span class="mini-pill">5 remaining</span></div><label><input type="checkbox"><span>Finish dashboard redesign</span><em>Design</em></label><label><input type="checkbox"><span>Connect GitHub repository</span><em>Dev</em></label><label><input type="checkbox"><span>Plan AI backend</span><em>AI</em></label></article>
-          </div>
-        </section>
-
-        <section class="page" id="page-ai">
-          <div class="page-intro"><div><span class="eyebrow">SYVORA AI</span><h1>Ask anything.</h1><p>A normal AI chatbot when you want one, a connected workspace assistant when you need more.</p></div><button class="primary-button" id="newChat"><i data-lucide="plus"></i> New chat</button></div>
-          <div class="ai-shell"><aside class="chat-list"><button class="chat-list-item active"><i data-lucide="message-square"></i><span><b>Design Syvora</b><small>Just now</small></span></button><button class="chat-list-item"><i data-lucide="message-square"></i><span><b>Roblox game ideas</b><small>Yesterday</small></span></button><button class="chat-list-item"><i data-lucide="message-square"></i><span><b>Landing page copy</b><small>2d ago</small></span></button></aside><div class="chat-main"><div class="chat-head"><div><span class="ai-status"><i data-lucide="sparkles"></i></span><div><b>Syvora AI</b><small>Ready</small></div></div><select id="chatMode"><option>Normal Chat</option><option>Workspace Chat</option></select></div><div class="messages" id="messages"><div class="empty-chat"><div class="syvora-logo large-logo"><span class="hub"></span><span class="ray r1"></span><span class="ray r2"></span><span class="ray r3"></span><span class="ray r4"></span><span class="node n1"></span><span class="node n2"></span><span class="node n3"></span><span class="node n4"></span></div><h2>What can I help you with?</h2><p>Ask a question, brainstorm an idea, upload a file, write code, or switch to Workspace Chat.</p><div class="prompt-grid"><button>Plan a new product</button><button>Help me write code</button><button>Brainstorm content ideas</button><button>Summarize a document</button></div></div></div><div class="chat-composer"><textarea id="chatInput" rows="2" placeholder="Message Syvora..."></textarea><div><span><button><i data-lucide="paperclip"></i></button><button><i data-lucide="globe-2"></i></button></span><button class="send-button" id="chatSend"><i data-lucide="arrow-up"></i></button></div></div></div></div>
-        </section>
-
-        <section class="page" id="page-projects"><div class="page-intro"><div><span class="eyebrow">WORKSPACE</span><h1>Projects</h1><p>Plan, track, and ship work with your team and AI.</p></div><button class="primary-button" id="newProjectBtn"><i data-lucide="plus"></i> New project</button></div><div class="project-cards" id="projectCards"><article class="project-card"><div><span class="project-mark black">TH</span><span class="mini-pill">Active</span></div><h3>Tournament Hunt</h3><p>Roblox tournament discovery and community platform.</p><div class="project-meta"><span>8 tasks</span><span>3 members</span><b>67%</b></div><div class="bar"><i style="width:67%"></i></div></article><article class="project-card"><div><span class="project-mark amber">BX</span><span class="mini-pill">Active</span></div><h3>Bloxy</h3><p>AI-powered Roblox game builder and Studio companion.</p><div class="project-meta"><span>12 tasks</span><span>2 members</span><b>42%</b></div><div class="bar"><i style="width:42%"></i></div></article><article class="project-card"><div><span class="project-mark blue">SY</span><span class="mini-pill blue-pill">New</span></div><h3>Syvora</h3><p>Unified AI workspace for chat, code, projects and agents.</p><div class="project-meta"><span>6 tasks</span><span>1 member</span><b>24%</b></div><div class="bar"><i style="width:24%"></i></div></article></div><div class="kanban"><div class="kanban-col"><div class="kanban-head"><b>Backlog</b><span>3</span></div><div class="kanban-card"><span class="label blue-label">AI</span><b>Connect model backend</b><small>Normal + workspace chat</small></div><div class="kanban-card"><span class="label violet-label">Dev</span><b>GitHub sync</b><small>Repos, issues, commits</small></div></div><div class="kanban-col"><div class="kanban-head"><b>In progress</b><span>2</span></div><div class="kanban-card"><span class="label green-label">Design</span><b>Dashboard V2</b><small>New visual system</small></div><div class="kanban-card"><span class="label violet-label">Dev</span><b>Navigation system</b><small>Polish app shell</small></div></div><div class="kanban-col"><div class="kanban-head"><b>Done</b><span>2</span></div><div class="kanban-card done"><span class="label green-label">Design</span><b>Product direction</b><small>Core features defined</small></div><div class="kanban-card done"><span class="label violet-label">Dev</span><b>Create repository</b><small>Radin-dev1/Syvora</small></div></div></div></section>
-
-        <section class="page" id="page-chat"><div class="page-intro"><div><span class="eyebrow">TEAM</span><h1>Chat</h1><p>Channels, direct messages, files, and AI summaries in one place.</p></div><button class="primary-button"><i data-lucide="plus"></i> New message</button></div><div class="team-shell"><aside><b>Syvora Team</b><span>CHANNELS</span><button class="active"># general</button><button># design</button><button># development</button><button># ai-lab</button><span>DIRECT MESSAGES</span><button>● Alex</button><button>● Maya</button></aside><div><div class="channel-head"><span><b># general</b><small>Team updates and ideas</small></span><button class="soft-button"><i data-lucide="users"></i> 4</button></div><div class="team-messages"><div class="team-msg"><span class="avatar">A</span><div><b>Alex <small>10:22 AM</small></b><p>The new dashboard direction feels way cleaner.</p></div></div><div class="team-msg"><span class="avatar">M</span><div><b>Maya <small>10:28 AM</small></b><p>Build should keep the prompt and preview side-by-side.</p></div></div><div class="team-msg ai-msg"><span class="ai-status"><i data-lucide="sparkles"></i></span><div><b>Syvora AI <small>10:29 AM</small></b><p>Summary: cleaner dashboard, persistent AI access, and a split-screen builder are the current design priorities.</p></div></div></div><div class="chat-composer"><textarea rows="2" placeholder="Message #general"></textarea><div><span><button><i data-lucide="paperclip"></i></button><button><i data-lucide="smile"></i></button></span><button class="send-button"><i data-lucide="arrow-up"></i></button></div></div></div></div></section>
-
-        <section class="page" id="page-build"><div class="page-intro compact"><div><span class="eyebrow">VIBE CODING</span><h1>Build</h1><p>Describe what you want. Syvora turns it into a working product.</p></div><button class="primary-button"><i data-lucide="rocket"></i> Publish</button></div><div class="builder"><aside class="builder-chat"><div class="builder-brand"><span class="ai-status"><i data-lucide="wand-sparkles"></i></span><div><b>Build with Syvora</b><small>Prompt → preview → code</small></div></div><div class="build-log" id="buildLog"><div class="builder-empty"><h3>What should we build?</h3><p>Describe the product, page, tool, or app you want to create.</p><div class="suggestion-chips"><button>Landing page</button><button>Dashboard</button><button>Portfolio</button><button>AI app</button></div></div></div><div class="build-input"><textarea id="buildInput" rows="3" placeholder="Build me a modern..."></textarea><button class="send-button" id="buildSend"><i data-lucide="arrow-up"></i></button></div></aside><div class="preview"><div class="preview-top"><div class="traffic"><i></i><i></i><i></i></div><div class="preview-url">syvora-preview.local</div><div class="preview-actions"><button><i data-lucide="monitor"></i></button><button><i data-lucide="smartphone"></i></button><button><i data-lucide="refresh-cw"></i></button></div></div><div class="preview-canvas"><div class="mock-site"><nav><b>Northstar</b><span>Product&nbsp;&nbsp; Solutions&nbsp;&nbsp; Pricing</span><button>Get started</button></nav><div class="mock-hero"><span>BUILT WITH SYVORA</span><h2>Build what matters.</h2><p>A clean first-pass product page generated from your prompt.</p><div><button>Start building</button><button class="secondary">Learn more</button></div></div></div></div></div></div></section>
-
-        <section class="page" id="page-code"><div class="page-intro compact"><div><span class="eyebrow">DEVELOPER</span><h1>Code</h1><p>Your repository, editor, commits, issues, and AI in one workspace.</p></div><button class="primary-button"><i data-lucide="git-commit-horizontal"></i> Commit</button></div><div class="code-shell"><aside class="file-tree"><b><i data-lucide="github"></i> Syvora</b><button class="active"><i data-lucide="file-code"></i> index.html</button><button><i data-lucide="file-code"></i> styles.css</button><button><i data-lucide="file-code"></i> app.js</button><button><i data-lucide="file-text"></i> README.md</button></aside><div class="editor"><div class="editor-tabs"><span>index.html <i data-lucide="x"></i></span></div><pre><code><span class="c-purple">&lt;section</span> <span class="c-blue">class</span>=<span class="c-green">"hero"</span><span class="c-purple">&gt;</span>
-  <span class="c-purple">&lt;h1&gt;</span>Build what matters.<span class="c-purple">&lt;/h1&gt;</span>
-  <span class="c-purple">&lt;p&gt;</span>Your intelligent workspace.<span class="c-purple">&lt;/p&gt;</span>
-<span class="c-purple">&lt;/section&gt;</span></code></pre></div><aside class="git-panel"><span class="eyebrow">GITHUB</span><h3>Radin-dev1/Syvora</h3><div class="git-stat"><i data-lucide="git-branch"></i><span><b>main</b><small>Up to date</small></span></div><div class="git-stat"><i data-lucide="circle-dot"></i><span><b>3 issues</b><small>1 high priority</small></span></div><div class="git-stat"><i data-lucide="git-pull-request"></i><span><b>1 pull request</b><small>Ready to review</small></span></div></aside></div></section>
-
-        <section class="page" id="page-agents"><div class="page-intro"><div><span class="eyebrow">AI TEAM</span><h1>Agents</h1><p>Create AI teammates with roles, tools, permissions, and memory.</p></div><button class="primary-button"><i data-lucide="plus"></i> New agent</button></div><div class="feature-grid"><article><span class="feature-icon blue"><i data-lucide="code-2"></i></span><div class="status-row"><span class="online"></span> Active</div><h3>Developer</h3><p>Writes code, fixes bugs, reviews changes, and helps ship features.</p><div class="feature-footer"><span>3 tasks running</span><button><i data-lucide="arrow-up-right"></i></button></div></article><article><span class="feature-icon green"><i data-lucide="clipboard-check"></i></span><div class="status-row"><span class="online"></span> Active</div><h3>Project Manager</h3><p>Tracks progress, creates tasks, and keeps projects moving.</p><div class="feature-footer"><span>Watching 3 projects</span><button><i data-lucide="arrow-up-right"></i></button></div></article><article><span class="feature-icon violet"><i data-lucide="search"></i></span><div class="status-row muted"><span></span> Idle</div><h3>Researcher</h3><p>Finds information, compares options, and produces concise reports.</p><div class="feature-footer"><span>Ready</span><button><i data-lucide="arrow-up-right"></i></button></div></article></div></section>
-
-        <section class="page" id="page-labs"><div class="page-intro"><div><span class="eyebrow">EXPERIMENTAL</span><h1>Labs</h1><p>Explore creative AI tools and experimental Syvora features.</p></div></div><div class="feature-grid"><article><span class="feature-icon violet"><i data-lucide="image"></i></span><h3>Image Studio</h3><p>Generate and edit visuals directly inside your workspace.</p><button class="soft-button">Open tool</button></article><article><span class="feature-icon blue"><i data-lucide="panels-top-left"></i></span><h3>UI Generator</h3><p>Turn product ideas into polished interface concepts.</p><button class="soft-button">Open tool</button></article><article><span class="feature-icon green"><i data-lucide="presentation"></i></span><h3>Deck Maker</h3><p>Create clean presentations from a topic or project.</p><button class="soft-button">Open tool</button></article><article><span class="feature-icon orange"><i data-lucide="video"></i></span><h3>Video Lab</h3><p>Prototype videos and motion concepts with AI.</p><button class="soft-button">Coming soon</button></article></div></section>
-
-        <section class="page" id="page-files"><div class="page-intro"><div><span class="eyebrow">WORKSPACE</span><h1>Files</h1><p>Everything your team and AI need, organized in one place.</p></div><button class="primary-button"><i data-lucide="upload"></i> Upload</button></div><div class="table-card"><div class="table-head"><span>Name</span><span>Type</span><span>Updated</span><span></span></div><div class="file-line"><span><i data-lucide="folder"></i><b>Design</b></span><span>Folder</span><span>Today</span><button><i data-lucide="more-horizontal"></i></button></div><div class="file-line"><span><i data-lucide="image"></i><b>syvora-logo.png</b></span><span>PNG</span><span>Today</span><button><i data-lucide="more-horizontal"></i></button></div><div class="file-line"><span><i data-lucide="file-text"></i><b>product-plan.md</b></span><span>Markdown</span><span>Yesterday</span><button><i data-lucide="more-horizontal"></i></button></div></div></section>
-
-        <section class="page" id="page-automations"><div class="page-intro"><div><span class="eyebrow">WORKFLOWS</span><h1>Automations</h1><p>Connect events, actions, and AI agents without repetitive work.</p></div><button class="primary-button"><i data-lucide="plus"></i> New automation</button></div><div class="automation-card"><div><span class="feature-icon blue"><i data-lucide="github"></i></span><span><b>New GitHub issue → Developer Agent</b><small>Assigns coding bugs to your developer agent automatically.</small></span></div><button class="toggle on"><i></i></button></div><div class="automation-card"><div><span class="feature-icon orange"><i data-lucide="clock-3"></i></span><span><b>Overdue task → AI recovery plan</b><small>Creates a catch-up plan when work becomes overdue.</small></span></div><button class="toggle on"><i></i></button></div></section>
+  <main class="main">
+    <header class="topbar">
+      <div class="mobile-brand"><div class="mobile-mark"><span></span></div><b>Syvora</b></div>
+      <div class="top-context"><span id="pageTitle">Home</span><span class="slash">/</span><span class="context-muted">Personal workspace</span></div>
+      <div class="top-actions">
+        <button class="icon-button" title="Notifications"><i data-lucide="bell"></i><span class="notification-dot"></span></button>
+        <button class="ghost-button"><i data-lucide="user-plus"></i><span>Invite</span></button>
+        <button class="new-button" id="newMenuButton"><i data-lucide="plus"></i><span>New</span><i data-lucide="chevron-down"></i></button>
       </div>
-    </main>
-  </div>
+    </header>
 
-  <div class="command-modal" id="commandModal" aria-hidden="true"><div class="command-box"><div class="command-search"><i data-lucide="search"></i><input id="commandInput" placeholder="Search pages or commands..."><kbd>ESC</kbd></div><div class="command-options"><button data-page-link="ai"><i data-lucide="sparkles"></i><span><b>Open AI Chat</b><small>Ask Syvora anything</small></span></button><button data-page-link="build"><i data-lucide="wand-sparkles"></i><span><b>Build something</b><small>Open the vibe coding studio</small></span></button><button data-page-link="projects"><i data-lucide="layout-dashboard"></i><span><b>Projects</b><small>Open your project workspace</small></span></button><button data-page-link="agents"><i data-lucide="bot"></i><span><b>Agents</b><small>Manage your AI team</small></span></button></div></div></div>
-  <div class="toast" id="toast"></div>
-  <script src="app.js"></script>
+    <div class="page-wrap">
+      <section class="page active" id="page-home">
+        <div class="home-head">
+          <div>
+            <div class="date-line" id="todayLabel">THURSDAY · AUG 27</div>
+            <h1>Good evening, Radin.</h1>
+            <p>What are we making today?</p>
+          </div>
+          <div class="home-head-actions">
+            <button class="ghost-button"><i data-lucide="layout-grid"></i> Customize</button>
+          </div>
+        </div>
+
+        <div class="ask-card" id="askCard">
+          <div class="ask-top">
+            <div class="ask-logo"><i data-lucide="sparkles"></i></div>
+            <textarea id="homePrompt" rows="2" placeholder="Ask Syvora anything, or tell it what to build..."></textarea>
+          </div>
+          <div class="ask-bottom">
+            <div class="ask-tools">
+              <button title="Attach"><i data-lucide="paperclip"></i></button>
+              <button title="Web search"><i data-lucide="globe-2"></i></button>
+              <button title="Voice"><i data-lucide="audio-lines"></i></button>
+            </div>
+            <div class="ask-actions">
+              <select id="homeMode" aria-label="AI mode"><option>Normal chat</option><option>Workspace chat</option><option>Build mode</option></select>
+              <button class="send-button" id="homeSend"><i data-lucide="arrow-up"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="quick-actions">
+          <button data-prompt="Build me a modern website"><span class="qa-icon peach"><i data-lucide="wand-sparkles"></i></span><span><b>Build something</b><small>Website, tool or prototype</small></span><i data-lucide="arrow-up-right"></i></button>
+          <button data-page-link="projects"><span class="qa-icon blue"><i data-lucide="list-checks"></i></span><span><b>Plan a project</b><small>Tasks, goals and milestones</small></span><i data-lucide="arrow-up-right"></i></button>
+          <button data-page-link="ai"><span class="qa-icon lilac"><i data-lucide="brain"></i></span><span><b>Think with AI</b><small>Research and brainstorm</small></span><i data-lucide="arrow-up-right"></i></button>
+          <button data-page-link="code"><span class="qa-icon mint"><i data-lucide="github"></i></span><span><b>Work on code</b><small>Open a repository</small></span><i data-lucide="arrow-up-right"></i></button>
+        </div>
+
+        <div class="section-row"><div><h2>Your workspace</h2><p>Pick up where you left off</p></div><button class="text-button">View all <i data-lucide="arrow-right"></i></button></div>
+
+        <div class="workspace-grid">
+          <article class="feature-card project-feature" data-page-link="build">
+            <div class="card-kicker"><span class="status-dot green"></span> ACTIVE PROJECT</div>
+            <div class="feature-copy"><h3>Syvora</h3><p>Design the all-in-one AI workspace.</p></div>
+            <div class="mock-window">
+              <div class="mock-toolbar"><span></span><span></span><span></span><b>syvora.app</b></div>
+              <div class="mock-body"><div class="mock-side"></div><div class="mock-content"><div class="mock-title"></div><div class="mock-line wide"></div><div class="mock-line"></div><div class="mock-cards"><i></i><i></i><i></i></div></div></div>
+            </div>
+            <div class="feature-footer"><div><span>18%</span><div class="progress"><i style="width:18%"></i></div></div><button class="round-arrow"><i data-lucide="arrow-up-right"></i></button></div>
+          </article>
+
+          <article class="metric-card">
+            <div class="card-top"><div><span class="card-label">TASKS</span><h3>Today</h3></div><span class="count-pill">4 left</span></div>
+            <div class="task-stack">
+              <label><input type="checkbox"><span></span><p><b>Refine dashboard</b><small>Syvora · Design</small></p><em class="priority red"></em></label>
+              <label><input type="checkbox"><span></span><p><b>Connect repository</b><small>Syvora · Code</small></p><em class="priority orange"></em></label>
+              <label><input type="checkbox"><span></span><p><b>Review agent flow</b><small>Bloxy · AI</small></p><em class="priority blue"></em></label>
+            </div>
+            <button class="inline-add"><i data-lucide="plus"></i> Add task</button>
+          </article>
+
+          <article class="metric-card ai-activity">
+            <div class="card-top"><div><span class="card-label">AI ACTIVITY</span><h3>Working for you</h3></div><div class="live-pulse"><i></i> Live</div></div>
+            <div class="agent-row"><span class="agent-icon cyan"><i data-lucide="code-2"></i></span><span><b>Developer</b><small>Reviewing 3 files</small></span><em>Now</em></div>
+            <div class="agent-row"><span class="agent-icon purple"><i data-lucide="search"></i></span><span><b>Researcher</b><small>Competitor notes ready</small></span><em>8m</em></div>
+            <div class="agent-row"><span class="agent-icon amber"><i data-lucide="list-todo"></i></span><span><b>Project manager</b><small>2 tasks updated</small></span><em>21m</em></div>
+          </article>
+
+          <article class="metric-card github-card">
+            <div class="card-top"><div><span class="card-label">GITHUB</span><h3>Latest changes</h3></div><span class="github-chip"><i data-lucide="github"></i></span></div>
+            <div class="commit-big"><span class="commit-icon"><i data-lucide="git-commit-horizontal"></i></span><div><b>Rebuild Syvora UI</b><small>main · just now</small></div></div>
+            <div class="repo-stat"><span><i data-lucide="git-branch"></i> main</span><span class="success"><i data-lucide="circle-check"></i> Deployed</span></div>
+          </article>
+
+          <article class="notes-card">
+            <div class="card-top"><div><span class="card-label">QUICK NOTE</span><h3>Ideas</h3></div><button class="icon-button"><i data-lucide="more-horizontal"></i></button></div>
+            <textarea placeholder="Write something down...">Make Syvora feel like one workspace — not six apps glued together.</textarea>
+            <div class="note-footer"><span>Edited a moment ago</span><i data-lucide="pen-line"></i></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page" id="page-ai">
+        <div class="product-shell ai-shell">
+          <aside class="inner-sidebar">
+            <button class="solid-wide" id="newChat"><i data-lucide="plus"></i> New chat</button>
+            <div class="inner-label">Today</div>
+            <button class="history active"><i data-lucide="message-square"></i><span>Syvora design direction</span></button>
+            <button class="history"><i data-lucide="message-square"></i><span>Plan AI platform</span></button>
+            <div class="inner-label">Previous</div>
+            <button class="history"><i data-lucide="message-square"></i><span>Roblox tournament ideas</span></button>
+            <button class="history"><i data-lucide="message-square"></i><span>GitHub integration</span></button>
+          </aside>
+          <div class="chat-main">
+            <div class="chat-header"><div><span class="ai-status"><i></i> SYVORA AI</span><h2>New conversation</h2></div><select id="chatMode"><option>Normal chat</option><option>Workspace chat</option><option>Build mode</option></select></div>
+            <div class="messages" id="messages">
+              <div class="empty-state"><div class="large-mark"><span class="large-core"></span><i class="ray-a"></i><i class="ray-b"></i><i class="ray-c"></i><i class="ray-d"></i><b class="node-a"></b><b class="node-b"></b><b class="node-c"></b><b class="node-d"></b></div><h2>How can I help?</h2><p>Chat normally, work with your files and projects, or ask Syvora to build something.</p><div class="starter-grid"><button>Help me plan a project</button><button>Explain something complex</button><button>Build a landing page</button><button>Review my code</button></div></div>
+            </div>
+            <div class="chat-compose"><textarea id="chatInput" rows="2" placeholder="Message Syvora..."></textarea><div><span><button><i data-lucide="paperclip"></i></button><button><i data-lucide="globe-2"></i></button></span><button class="send-button" id="chatSend"><i data-lucide="arrow-up"></i></button></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="page-projects">
+        <div class="page-heading"><div><span class="eyebrow">WORKSPACE</span><h1>Projects</h1><p>All your work, from idea to shipped.</p></div><button class="new-button" id="newProjectBtn"><i data-lucide="plus"></i> New project</button></div>
+        <div class="project-toolbar"><div class="view-tabs"><button class="active"><i data-lucide="layout-grid"></i> Overview</button><button><i data-lucide="columns-3"></i> Board</button><button><i data-lucide="calendar-days"></i> Timeline</button></div><div class="toolbar-right"><button class="ghost-button"><i data-lucide="filter"></i> Filter</button><button class="icon-button"><i data-lucide="search"></i></button></div></div>
+        <div class="project-list-grid" id="projectCards">
+          <article class="project-tile"><div class="project-cover cover-blue"><i data-lucide="sparkles"></i><span>18%</span></div><div class="project-tile-body"><div><h3>Syvora</h3><p>AI workspace</p></div><div class="member-stack"><span>R</span><i>+2</i></div></div><div class="project-meta"><span><i data-lucide="check-circle-2"></i> 6 tasks</span><span>Updated now</span></div></article>
+          <article class="project-tile"><div class="project-cover cover-yellow"><i data-lucide="blocks"></i><span>42%</span></div><div class="project-tile-body"><div><h3>Bloxy</h3><p>Roblox AI builder</p></div><div class="member-stack"><span>R</span><span>A</span></div></div><div class="project-meta"><span><i data-lucide="check-circle-2"></i> 12 tasks</span><span>1h ago</span></div></article>
+          <article class="project-tile"><div class="project-cover cover-dark"><i data-lucide="trophy"></i><span>67%</span></div><div class="project-tile-body"><div><h3>Tournament Hunt</h3><p>Community platform</p></div><div class="member-stack"><span>R</span><span>M</span><i>+1</i></div></div><div class="project-meta"><span><i data-lucide="check-circle-2"></i> 8 tasks</span><span>Yesterday</span></div></article>
+          <button class="new-project-tile"><i data-lucide="plus"></i><span>New project</span></button>
+        </div>
+        <div class="board-head"><div><h2>Syvora sprint</h2><span>7 tasks</span></div><button class="text-button"><i data-lucide="settings-2"></i> Board settings</button></div>
+        <div class="kanban">
+          <div class="kanban-col"><div class="kanban-title"><span><i class="kanban-dot gray"></i>Backlog</span><b>3</b></div><div class="kanban-card"><span class="tag violet">AI</span><h4>Connect model backend</h4><p>Normal + workspace chat</p><footer><span class="mini-avatar">R</span><span><i data-lucide="message-circle"></i> 2</span></footer></div><div class="kanban-card"><span class="tag blue">DEV</span><h4>GitHub sync</h4><p>Repos, issues and commits</p><footer><span class="mini-avatar">R</span><span><i data-lucide="paperclip"></i> 1</span></footer></div></div>
+          <div class="kanban-col"><div class="kanban-title"><span><i class="kanban-dot blue"></i>In progress</span><b>2</b></div><div class="kanban-card featured"><span class="tag pink">DESIGN</span><h4>New workspace UI</h4><p>Rebuild core product experience</p><footer><span class="mini-avatar">R</span><span><i data-lucide="message-circle"></i> 5</span></footer></div><div class="kanban-card"><span class="tag blue">DEV</span><h4>Responsive layout</h4><p>Desktop + tablet + mobile</p><footer><span class="mini-avatar">R</span></footer></div></div>
+          <div class="kanban-col"><div class="kanban-title"><span><i class="kanban-dot green"></i>Done</span><b>2</b></div><div class="kanban-card done"><span class="tag green">PLAN</span><h4>Product direction</h4><p>Core features defined</p><footer><span class="mini-avatar">R</span><i data-lucide="circle-check"></i></footer></div><div class="kanban-card done"><span class="tag blue">DEV</span><h4>Create repository</h4><p>Radin-dev1/Syvora</p><footer><span class="mini-avatar">R</span><i data-lucide="circle-check"></i></footer></div></div>
+        </div>
+      </section>
+
+      <section class="page" id="page-chat">
+        <div class="product-shell team-shell">
+          <aside class="channel-sidebar"><div class="team-switch"><span class="team-logo">S</span><span><b>Syvora</b><small>4 members</small></span><i data-lucide="chevrons-up-down"></i></div><div class="inner-label">Channels</div><button class="channel active"><i data-lucide="hash"></i>general<span>3</span></button><button class="channel"><i data-lucide="hash"></i>design</button><button class="channel"><i data-lucide="hash"></i>development</button><button class="channel"><i data-lucide="hash"></i>ai-lab</button><div class="inner-label">Direct messages</div><button class="channel"><span class="presence online"></span>Alex</button><button class="channel"><span class="presence online"></span>Maya</button></aside>
+          <div class="team-main"><div class="channel-header"><div><h3><i data-lucide="hash"></i> general</h3><p>Company-wide updates and ideas</p></div><div><button class="icon-button"><i data-lucide="search"></i></button><button class="ghost-button"><i data-lucide="users"></i> 4</button></div></div><div class="team-messages"><div class="date-rule"><span>Today</span></div><div class="team-message"><span class="person-avatar a">A</span><div><b>Alex <small>10:22 AM</small></b><p>The new workspace direction feels much cleaner. The home should feel useful the second you open it.</p><div class="reactions"><button>🔥 3</button><button>👍 2</button></div></div></div><div class="team-message"><span class="person-avatar m">M</span><div><b>Maya <small>10:28 AM</small></b><p>I like the Build page staying focused: instructions on the left, the actual product on the right.</p></div></div><div class="team-message syvora-message"><span class="person-avatar sy"><i data-lucide="sparkles"></i></span><div><b>Syvora AI <span class="bot-label">BOT</span> <small>10:29 AM</small></b><p>Summary: prioritize a calm workspace, useful home dashboard, and a focused split-screen builder.</p></div></div></div><div class="team-compose"><textarea rows="2" placeholder="Message #general"></textarea><div><span><button><i data-lucide="plus"></i></button><button><i data-lucide="smile"></i></button><button><i data-lucide="at-sign"></i></button></span><button class="send-button"><i data-lucide="arrow-up"></i></button></div></div></div>
+        </div>
+      </section>
+
+      <section class="page" id="page-build">
+        <div class="build-shell">
+          <aside class="build-chat-panel"><div class="build-panel-head"><div><span class="build-badge"><i data-lucide="wand-sparkles"></i></span><span><b>Syvora Build</b><small>Vibe coding workspace</small></span></div><button class="icon-button"><i data-lucide="more-horizontal"></i></button></div><div class="build-conversation" id="buildLog"><div class="build-welcome"><h2>What should we build?</h2><p>Describe an app, site or feature. Syvora will turn your idea into a working project.</p><div class="build-chips"><button>Portfolio</button><button>Dashboard</button><button>SaaS app</button><button>Landing page</button></div></div></div><div class="build-compose"><textarea id="buildInput" rows="3" placeholder="Build a modern dashboard for..."></textarea><div><span><button><i data-lucide="paperclip"></i></button><button><i data-lucide="image"></i></button></span><button class="send-button" id="buildSend"><i data-lucide="arrow-up"></i></button></div></div></aside>
+          <div class="build-stage"><div class="stage-header"><div class="stage-tabs"><button class="active"><i data-lucide="monitor"></i> Preview</button><button><i data-lucide="code-2"></i> Code</button><button><i data-lucide="terminal"></i> Console</button></div><div><button class="ghost-button"><i data-lucide="rotate-ccw"></i></button><button class="ghost-button"><i data-lucide="github"></i> GitHub</button><button class="publish-button"><i data-lucide="rocket"></i> Publish</button></div></div><div class="browser-frame"><div class="browser-bar"><div class="browser-lights"><i></i><i></i><i></i></div><div class="browser-url"><i data-lucide="lock"></i> preview.syvora.app</div><div class="browser-actions"><i data-lucide="refresh-cw"></i><i data-lucide="external-link"></i></div></div><div class="site-preview"><nav><b><span class="preview-logo"></span>Northstar</b><div><a>Product</a><a>Solutions</a><a>Pricing</a></div><button>Get started</button></nav><section><span class="preview-pill">NEW · AI WORKFLOWS</span><h1>Build better work,<br>without the busywork.</h1><p>A calm workspace for projects, collaboration and intelligent automation.</p><div><button>Start free <i data-lucide="arrow-right"></i></button><button class="secondary">See how it works</button></div></section><div class="preview-stats"><div><b>24k</b><span>teams building</span></div><div><b>98%</b><span>tasks automated</span></div><div><b>4.9/5</b><span>customer rating</span></div></div></div></div></div>
+        </div>
+      </section>
+
+      <section class="page" id="page-code">
+        <div class="code-workspace"><aside class="repo-sidebar"><div class="repo-title"><i data-lucide="github"></i><span><b>Radin-dev1 / Syvora</b><small>main</small></span><i data-lucide="chevron-down"></i></div><div class="repo-actions"><button><i data-lucide="search"></i></button><button><i data-lucide="plus"></i></button><button><i data-lucide="more-horizontal"></i></button></div><div class="file-list"><button><i data-lucide="folder"></i>assets</button><button class="active"><i data-lucide="file-code-2"></i>index.html</button><button><i data-lucide="file-code-2"></i>styles.css</button><button><i data-lucide="file-json-2"></i>app.js</button><button><i data-lucide="file-text"></i>README.md</button></div><div class="branch-info"><i data-lucide="git-branch"></i><span><b>main</b><small>Up to date</small></span><i data-lucide="circle-check"></i></div></aside><div class="editor-area"><div class="editor-tabs"><button class="active"><i data-lucide="file-code-2"></i>index.html <span>×</span></button><button><i data-lucide="file-code-2"></i>styles.css <span>×</span></button></div><div class="editor-code"><div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12</div><pre><span class="code-gray">&lt;!doctype html&gt;</span>
+<span class="code-pink">&lt;html</span> <span class="code-blue">lang</span>=<span class="code-green">"en"</span><span class="code-pink">&gt;</span>
+  <span class="code-pink">&lt;head&gt;</span>
+    <span class="code-pink">&lt;title&gt;</span>Syvora<span class="code-pink">&lt;/title&gt;</span>
+  <span class="code-pink">&lt;/head&gt;</span>
+  <span class="code-pink">&lt;body&gt;</span>
+    <span class="code-pink">&lt;main</span> <span class="code-blue">class</span>=<span class="code-green">"workspace"</span><span class="code-pink">&gt;</span>
+      <span class="code-pink">&lt;h1&gt;</span>Build anything.<span class="code-pink">&lt;/h1&gt;</span>
+    <span class="code-pink">&lt;/main&gt;</span>
+  <span class="code-pink">&lt;/body&gt;</span>
+<span class="code-pink">&lt;/html&gt;</span></pre></div><div class="editor-status"><span><i data-lucide="git-branch"></i> main</span><span><i data-lucide="circle-check"></i> 0 problems</span><span>Ln 7, Col 12</span></div></div><aside class="git-sidebar"><div class="git-head"><b>Source control</b><button class="icon-button"><i data-lucide="refresh-cw"></i></button></div><div class="changes-card"><span class="change-status">M</span><div><b>styles.css</b><small>Modified</small></div><span>+124</span></div><div class="commit-box"><textarea placeholder="Commit message">Improve workspace UI</textarea><button class="commit-button"><i data-lucide="git-commit-horizontal"></i> Commit changes</button></div><div class="commit-history"><span class="inner-label">Recent commits</span><div><i data-lucide="git-commit-horizontal"></i><span><b>Full redesign</b><small>2 min ago</small></span></div><div><i data-lucide="git-commit-horizontal"></i><span><b>Fix page layout</b><small>12 min ago</small></span></div></div></aside></div>
+      </section>
+
+      <section class="page" id="page-agents">
+        <div class="page-heading"><div><span class="eyebrow">AI TEAM</span><h1>Agents</h1><p>AI teammates that can work across Syvora.</p></div><button class="new-button"><i data-lucide="plus"></i> Create agent</button></div><div class="agent-grid"><article class="agent-card-new"><div class="agent-avatar-new cyan"><i data-lucide="code-2"></i><span class="agent-online"></span></div><span class="agent-state">WORKING</span><h3>Developer</h3><p>Writes code, fixes bugs and reviews pull requests.</p><div class="agent-task"><i data-lucide="loader-circle"></i><span><b>Reviewing UI changes</b><small>Syvora · 3 files</small></span></div><footer><span>7 tasks this week</span><button><i data-lucide="arrow-up-right"></i></button></footer></article><article class="agent-card-new"><div class="agent-avatar-new purple"><i data-lucide="search"></i></div><span class="agent-state idle">READY</span><h3>Researcher</h3><p>Finds information, compares products and creates briefs.</p><div class="agent-task quiet"><i data-lucide="check"></i><span><b>Research complete</b><small>AI workspace competitors</small></span></div><footer><span>12 tasks this week</span><button><i data-lucide="arrow-up-right"></i></button></footer></article><article class="agent-card-new"><div class="agent-avatar-new amber"><i data-lucide="list-todo"></i><span class="agent-online"></span></div><span class="agent-state">WATCHING</span><h3>Project manager</h3><p>Tracks progress, creates tasks and keeps work moving.</p><div class="agent-task"><i data-lucide="eye"></i><span><b>Watching 3 projects</b><small>No blockers found</small></span></div><footer><span>18 updates this week</span><button><i data-lucide="arrow-up-right"></i></button></footer></article><button class="create-agent-card"><span><i data-lucide="plus"></i></span><b>Create your own agent</b><small>Choose instructions, tools and permissions.</small></button></div>
+      </section>
+
+      <section class="page" id="page-labs">
+        <div class="page-heading labs-heading"><div><span class="eyebrow">EXPERIMENTAL</span><h1>Syvora Labs</h1><p>Try new AI tools before they join the main product.</p></div><span class="labs-beta"><i></i> BETA</span></div><div class="labs-grid"><article class="lab-card lab-blue"><div class="lab-art"><i data-lucide="image"></i><span></span><span></span></div><span class="lab-label">CREATE</span><h3>Image Studio</h3><p>Generate, edit and transform visuals with AI.</p><button>Open experiment <i data-lucide="arrow-right"></i></button></article><article class="lab-card lab-purple"><div class="lab-art"><i data-lucide="layout-template"></i><span></span><span></span></div><span class="lab-label">DESIGN</span><h3>UI Generator</h3><p>Turn a description into polished interface concepts.</p><button>Open experiment <i data-lucide="arrow-right"></i></button></article><article class="lab-card lab-green"><div class="lab-art"><i data-lucide="presentation"></i><span></span><span></span></div><span class="lab-label">CREATE</span><h3>Presentation Maker</h3><p>Generate structured, presentation-ready decks.</p><button>Open experiment <i data-lucide="arrow-right"></i></button></article><article class="lab-card lab-orange"><div class="lab-art"><i data-lucide="box"></i><span></span><span></span></div><span class="lab-label">3D</span><h3>Asset Lab</h3><p>Prototype game and product assets from prompts.</p><button>Join waitlist <i data-lucide="arrow-right"></i></button></article></div>
+      </section>
+
+      <section class="page" id="page-files">
+        <div class="page-heading compact"><div><span class="eyebrow">WORKSPACE</span><h1>Files</h1><p>Everything your projects and AI can work with.</p></div><div class="heading-actions"><button class="ghost-button"><i data-lucide="folder-plus"></i> New folder</button><button class="new-button"><i data-lucide="upload"></i> Upload</button></div></div><div class="files-toolbar"><div class="file-search"><i data-lucide="search"></i><input placeholder="Search files"></div><div><button class="view-icon active"><i data-lucide="list"></i></button><button class="view-icon"><i data-lucide="grid-2x2"></i></button></div></div><div class="files-table"><div class="files-head"><span>Name</span><span>Project</span><span>Modified</span><span>Size</span><span></span></div><div class="file-row"><span><i class="file-icon folder"><i data-lucide="folder"></i></i><b>Brand assets</b></span><span>Syvora</span><span>Today</span><span>—</span><button><i data-lucide="more-horizontal"></i></button></div><div class="file-row"><span><i class="file-icon image"><i data-lucide="image"></i></i><b>syvora-logo.png</b></span><span>Syvora</span><span>Today</span><span>184 KB</span><button><i data-lucide="more-horizontal"></i></button></div><div class="file-row"><span><i class="file-icon code"><i data-lucide="file-code-2"></i></i><b>dashboard-concept.html</b></span><span>Syvora</span><span>1h ago</span><span>42 KB</span><button><i data-lucide="more-horizontal"></i></button></div><div class="file-row"><span><i class="file-icon doc"><i data-lucide="file-text"></i></i><b>Product direction</b></span><span>Syvora</span><span>Yesterday</span><span>12 KB</span><button><i data-lucide="more-horizontal"></i></button></div></div>
+      </section>
+
+      <section class="page" id="page-automations">
+        <div class="page-heading"><div><span class="eyebrow">WORKFLOWS</span><h1>Automations</h1><p>Connect events, AI and actions without busywork.</p></div><button class="new-button"><i data-lucide="plus"></i> New automation</button></div><div class="automation-grid"><article class="automation-card"><div class="automation-top"><span class="automation-icon blue"><i data-lucide="github"></i></span><div class="toggle on"><i></i></div></div><h3>Bug fixer</h3><p>When a GitHub issue is labeled <b>bug</b>, assign the Developer agent.</p><div class="flow-line"><span><i data-lucide="github"></i> Issue</span><i data-lucide="arrow-right"></i><span><i data-lucide="bot"></i> Developer</span></div><footer><span><i></i> Ran 8 times</span><button><i data-lucide="more-horizontal"></i></button></footer></article><article class="automation-card"><div class="automation-top"><span class="automation-icon amber"><i data-lucide="clock-3"></i></span><div class="toggle on"><i></i></div></div><h3>Overdue task rescue</h3><p>When a task is overdue, ask AI to create a recovery plan.</p><div class="flow-line"><span><i data-lucide="list-checks"></i> Overdue</span><i data-lucide="arrow-right"></i><span><i data-lucide="sparkles"></i> AI plan</span></div><footer><span><i></i> Ran 3 times</span><button><i data-lucide="more-horizontal"></i></button></footer></article><button class="automation-create"><span><i data-lucide="plus"></i></span><b>Create automation</b><small>Start from scratch or describe what you want.</small></button></div>
+      </section>
+
+      <section class="page" id="page-settings">
+        <div class="settings-layout"><aside><h2>Settings</h2><button class="active"><i data-lucide="user"></i>Profile</button><button><i data-lucide="palette"></i>Appearance</button><button><i data-lucide="sparkles"></i>AI preferences</button><button><i data-lucide="plug"></i>Integrations</button><button><i data-lucide="credit-card"></i>Billing</button></aside><div class="settings-main"><div class="settings-head"><h1>Profile</h1><p>Manage how you appear across Syvora.</p></div><div class="settings-card"><div class="profile-setting"><span class="avatar large">R</span><div><b>Profile photo</b><small>JPG or PNG, up to 5MB.</small></div><button class="ghost-button">Change</button></div><div class="field-grid"><label>Display name<input value="Radin"></label><label>Email<input value="radin@example.com"></label><label class="full-field">Workspace name<input value="Radin's workspace"></label></div><div class="settings-actions"><button class="ghost-button">Cancel</button><button class="new-button">Save changes</button></div></div></div></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<div class="command-modal" id="commandModal" aria-hidden="true"><div class="command-box"><div class="command-input"><i data-lucide="search"></i><input id="commandInput" placeholder="Search pages, projects, chats and commands..."><kbd>ESC</kbd></div><div class="command-group"><span>Go to</span><button data-command-page="ai"><i data-lucide="sparkles"></i><span><b>AI chat</b><small>Talk to Syvora</small></span><kbd>G A</kbd></button><button data-command-page="projects"><i data-lucide="layout-dashboard"></i><span><b>Projects</b><small>Plan and track work</small></span><kbd>G P</kbd></button><button data-command-page="build"><i data-lucide="wand-sparkles"></i><span><b>Build</b><small>Create with AI</small></span><kbd>G B</kbd></button><button data-command-page="code"><i data-lucide="code-2"></i><span><b>Code</b><small>Open your repository</small></span><kbd>G C</kbd></button></div></div></div>
+<div class="toast" id="toast"></div>
+<script src="app.js"></script>
 </body>
 </html>
