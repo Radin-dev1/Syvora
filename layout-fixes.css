@@ -1,0 +1,26 @@
+/* Syvora layout fixes */
+/* Keep the hero and main AI composer visually separate — no overlap. */
+.hero-shell{
+  margin-bottom:0;
+}
+
+.hero-composer{
+  margin:24px auto 0 !important;
+  width:min(calc(100% - 48px),1120px) !important;
+  position:relative;
+  z-index:5;
+}
+
+/* Prevent the composer from floating into the hero on narrower screens. */
+@media (max-width: 900px){
+  .hero-composer{
+    width:100% !important;
+    margin:18px auto 0 !important;
+  }
+}
+
+@media (max-width: 640px){
+  .hero-composer{
+    margin-top:14px !important;
+  }
+}
