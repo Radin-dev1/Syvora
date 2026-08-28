@@ -1,3 +1,9 @@
+// Force GitHub Pages and browsers to load the latest stylesheet instead of a stale cached copy.
+const syvoraStyle=document.createElement('link');
+syvoraStyle.rel='stylesheet';
+syvoraStyle.href='./styles.css?v=20260828-0438';
+document.head.appendChild(syvoraStyle);
+
 const pages=[...document.querySelectorAll('.page')];
 const navItems=[...document.querySelectorAll('.nav-item[data-page]')];
 const pageTitle=document.getElementById('pageTitle');
