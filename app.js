@@ -1,56 +1,80 @@
-const pages=document.querySelectorAll('.page');
-const navItems=document.querySelectorAll('.nav-item[data-page]');
+const pages=[...document.querySelectorAll('.page')];
+const navItems=[...document.querySelectorAll('.nav-item[data-page]')];
 const pageTitle=document.getElementById('pageTitle');
 const toast=document.getElementById('toast');
-const pageNames={home:'Home',ai:'AI Chat',projects:'Projects',chat:'Team Chat',build:'Build',code:'Code',agents:'Agents',labs:'Labs',files:'Files',automations:'Automations'};
+const names={home:'Home',ai:'AI chat',projects:'Projects',chat:'Team chat',build:'Build',code:'Code',agents:'Agents',labs:'Labs',files:'Files',automations:'Automations',settings:'Settings'};
 
-function icons(){if(window.lucide)lucide.createIcons()}
+function icons(){if(window.lucide)window.lucide.createIcons()}
 function notify(text){if(!toast)return;toast.textContent=text;toast.classList.add('show');clearTimeout(notify.t);notify.t=setTimeout(()=>toast.classList.remove('show'),1700)}
-function go(page){pages.forEach(p=>p.classList.toggle('active',p.id===`page-${page}`));navItems.forEach(n=>n.classList.toggle('active',n.dataset.page===page));if(pageTitle)pageTitle.textContent=pageNames[page]||page;history.replaceState(null,'',page==='home'?location.pathname:`#${page}`);window.scrollTo({top:0,behavior:'smooth'});icons()}
-navItems.forEach(n=>n.addEventListener('click',()=>go(n.dataset.page)));
-document.querySelectorAll('[data-page-link]').forEach(b=>b.addEventListener('click',()=>{go(b.dataset.pageLink);closeCommand()}));
-const hash=location.hash.slice(1);if(pageNames[hash])go(hash);
+function openPage(name,push=true){if(!names[name])name='home';pages.forEach(p=>p.classList.toggle('active',p.id===`page-${name}`));navItems.forEach(n=>n.classList.toggle('active',n.dataset.page===name));if(pageTitle)pageTitle.textContent=names[name];if(push)history.replaceState(null,'',name==='home'?location.pathname:`#${name}`);window.scrollTo({top:0,behavior:'smooth'});icons()}
+navItems.forEach(n=>n.addEventListener('click',()=>openPage(n.dataset.page)));
+document.querySelectorAll('[data-page-link]').forEach(el=>el.addEventListener('click',()=>openPage(el.dataset.pageLink)));
+const first=location.hash.slice(1);if(names[first])openPage(first,false);
+window.addEventListener('hashchange',()=>{const name=location.hash.slice(1)||'home';openPage(name,false)});
 
-const commandModal=document.getElementById('commandModal');
+// Date label.
+const todayLabel=document.getElementById('todayLabel');
+if(todayLabel){const d=new Date();todayLabel.textContent=d.toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'}).toUpperCase()}
+
+// Command palette.
+const modal=document.getElementById('commandModal');
 const commandInput=document.getElementById('commandInput');
-function openCommand(){commandModal?.classList.add('open');commandModal?.setAttribute('aria-hidden','false');setTimeout(()=>commandInput?.focus(),40)}
-function closeCommand(){commandModal?.classList.remove('open');commandModal?.setAttribute('aria-hidden','true');if(commandInput){commandInput.value='';filterCommands('')}}
-function filterCommands(q){document.querySelectorAll('.command-options button').forEach(b=>b.style.display=b.textContent.toLowerCase().includes(q.toLowerCase())?'grid':'none')}
+function openCommand(){modal?.classList.add('open');modal?.setAttribute('aria-hidden','false');setTimeout(()=>commandInput?.focus(),50)}
+function closeCommand(){modal?.classList.remove('open');modal?.setAttribute('aria-hidden','true');if(commandInput)commandInput.value='';filterCommands('')}
+function filterCommands(q){document.querySelectorAll('.command-group button').forEach(b=>b.style.display=b.textContent.toLowerCase().includes(q.toLowerCase())?'grid':'none')}
 document.getElementById('commandButton')?.addEventListener('click',openCommand);
-commandModal?.addEventListener('click',e=>{if(e.target===commandModal)closeCommand()});
+modal?.addEventListener('click',e=>{if(e.target===modal)closeCommand()});
 commandInput?.addEventListener('input',e=>filterCommands(e.target.value));
-document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openCommand()}if(e.key==='Escape')closeCommand()});
+document.querySelectorAll('[data-command-page]').forEach(b=>b.addEventListener('click',()=>{openPage(b.dataset.commandPage);closeCommand()}));
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openCommand()}if(e.key==='Escape')closeCommand()});
 
-const messages=document.getElementById('messages');
-const chatInput=document.getElementById('chatInput');
-function clearEmpty(){messages?.querySelector('.empty-chat')?.remove()}
-function addMessage(text,assistant=false){if(!messages)return;clearEmpty();const row=document.createElement('div');row.className=`message ${assistant?'assistant':''}`;row.innerHTML=`<div class="message-avatar">${assistant?'<i data-lucide="sparkles"></i>':'R'}</div><div><strong>${assistant?'Syvora':'You'}</strong><p></p></div>`;row.querySelector('p').textContent=text;messages.appendChild(row);messages.scrollTop=messages.scrollHeight;icons()}
-function fakeReply(){setTimeout(()=>addMessage(document.getElementById('chatMode')?.value==='Workspace Chat'?'I can work with your connected workspace context here. The real backend comes after the design phase.':'Absolutely — this is Syvora in normal chatbot mode. The real AI model comes after the design is locked.',true),350)}
-document.getElementById('chatSend')?.addEventListener('click',()=>{const t=chatInput?.value.trim();if(!t)return;addMessage(t);chatInput.value='';fakeReply()});
-chatInput?.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();document.getElementById('chatSend')?.click()}});
-document.querySelectorAll('.prompt-grid button').forEach(b=>b.addEventListener('click',()=>{if(chatInput){chatInput.value=b.textContent;chatInput.focus()}}));
-document.getElementById('newChat')?.addEventListener('click',()=>{if(!messages)return;messages.innerHTML=`<div class="empty-chat"><div class="syvora-logo large-logo"><span class="hub"></span><span class="ray r1"></span><span class="ray r2"></span><span class="ray r3"></span><span class="ray r4"></span><span class="node n1"></span><span class="node n2"></span><span class="node n3"></span><span class="node n4"></span></div><h2>What can I help you with?</h2><p>Ask a question, brainstorm an idea, upload a file, write code, or switch to Workspace Chat.</p><div class="prompt-grid"><button>Plan a new product</button><button>Help me write code</button><button>Brainstorm content ideas</button><button>Summarize a document</button></div></div>`;document.querySelectorAll('.prompt-grid button').forEach(b=>b.addEventListener('click',()=>{chatInput.value=b.textContent;chatInput.focus()}));notify('New chat started')});
-
+// Home AI composer.
 const homePrompt=document.getElementById('homePrompt');
 const homeMode=document.getElementById('homeMode');
-document.getElementById('homeSend')?.addEventListener('click',()=>{const t=homePrompt?.value.trim();if(!t){notify('Type something first');return}if(homeMode?.value==='Build Mode'){go('build');const bi=document.getElementById('buildInput');if(bi)bi.value=t}else{go('ai');const cm=document.getElementById('chatMode');if(cm&&homeMode)cm.value=homeMode.value;addMessage(t);fakeReply()}homePrompt.value=''});
-homePrompt?.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey))document.getElementById('homeSend')?.click()});
+function submitHome(){const text=homePrompt?.value.trim();if(!text){notify('Type something first');return}const mode=homeMode?.value||'Normal chat';if(mode==='Build mode'){openPage('build');const field=document.getElementById('buildInput');if(field)field.value=text;appendBuild(text)}else{openPage('ai');const select=document.getElementById('chatMode');if(select)select.value=mode;appendMessage(text,'user');fakeReply(mode)}if(homePrompt)homePrompt.value=''}
+document.getElementById('homeSend')?.addEventListener('click',submitHome);
+homePrompt?.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitHome()}});
+document.querySelectorAll('[data-prompt]').forEach(b=>b.addEventListener('click',()=>{if(homePrompt){homePrompt.value=b.dataset.prompt;homePrompt.focus()}}));
 
+// Chat prototype.
+const messages=document.getElementById('messages');
+const chatInput=document.getElementById('chatInput');
+function clearEmpty(){messages?.querySelector('.empty-state')?.remove()}
+function appendMessage(text,role='user'){if(!messages)return;clearEmpty();const row=document.createElement('div');row.className=`message ${role==='assistant'?'assistant':''}`;row.innerHTML=`<div class="message-avatar">${role==='assistant'?'<i data-lucide="sparkles"></i>':'R'}</div><div><strong>${role==='assistant'?'Syvora':'You'}</strong><p></p></div>`;row.querySelector('p').textContent=text;messages.appendChild(row);messages.scrollTo({top:messages.scrollHeight,behavior:'smooth'});icons()}
+function fakeReply(mode=document.getElementById('chatMode')?.value){setTimeout(()=>appendMessage(mode==='Workspace chat'?'I can work with your projects, files, code and conversations from here. The connected actions will come in the functionality phase.':'Got it. This is the normal Syvora chat experience — the real AI backend comes after the design is locked in.','assistant'),420)}
+function sendChat(){const text=chatInput?.value.trim();if(!text)return;appendMessage(text);chatInput.value='';fakeReply()}
+document.getElementById('chatSend')?.addEventListener('click',sendChat);
+chatInput?.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat()}});
+document.querySelectorAll('.starter-grid button').forEach(b=>b.addEventListener('click',()=>{if(chatInput){chatInput.value=b.textContent;chatInput.focus()}}));
+document.getElementById('newChat')?.addEventListener('click',()=>{if(!messages)return;messages.innerHTML='<div class="empty-state"><div class="large-mark"><span class="large-core"></span><i class="ray-a"></i><i class="ray-b"></i><i class="ray-c"></i><i class="ray-d"></i><b class="node-a"></b><b class="node-b"></b><b class="node-c"></b><b class="node-d"></b></div><h2>How can I help?</h2><p>Chat normally, work with your files and projects, or ask Syvora to build something.</p><div class="starter-grid"><button>Help me plan a project</button><button>Explain something complex</button><button>Build a landing page</button><button>Review my code</button></div></div>';document.querySelectorAll('.starter-grid button').forEach(b=>b.addEventListener('click',()=>{if(chatInput){chatInput.value=b.textContent;chatInput.focus()}}));notify('New chat started')});
+
+// Build prototype.
 const buildInput=document.getElementById('buildInput');
 const buildLog=document.getElementById('buildLog');
-function addBuild(text){if(!buildLog)return;buildLog.querySelector('.builder-empty')?.remove();const u=document.createElement('div');u.style.cssText='margin:12px 0;padding:10px 11px;border:1px solid var(--line);border-radius:11px;background:#f7f9fb;font-size:10px;line-height:1.5';u.textContent=text;buildLog.appendChild(u);setTimeout(()=>{const a=document.createElement('div');a.style.cssText='font-size:10px;line-height:1.6;color:var(--muted);margin:12px 0';a.innerHTML='<b style="color:var(--text)">Syvora</b><br>Draft created in the preview. Tell me what to change next.';buildLog.appendChild(a)},300)}
-document.getElementById('buildSend')?.addEventListener('click',()=>{const t=buildInput?.value.trim();if(!t)return;addBuild(t);buildInput.value=''});
-buildInput?.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();document.getElementById('buildSend')?.click()}});
-document.querySelectorAll('.suggestion-chips button').forEach(b=>b.addEventListener('click',()=>{if(buildInput){buildInput.value=`Build me a ${b.textContent.toLowerCase()}`;buildInput.focus()}}));
+function appendBuild(text){if(!buildLog)return;buildLog.querySelector('.build-welcome')?.remove();const user=document.createElement('div');user.style.cssText='margin:10px 0 10px auto;max-width:88%;padding:9px 10px;border-radius:9px 9px 3px 9px;background:#202423;color:white;font-size:9px;line-height:1.5';user.textContent=text;buildLog.appendChild(user);if(buildInput)buildInput.value='';setTimeout(()=>{const ai=document.createElement('div');ai.style.cssText='margin:10px 0;max-width:90%;padding:9px 10px;border:1px solid #e2e2de;border-radius:3px 9px 9px 9px;background:#fafaf9;font-size:9px;line-height:1.55;color:#626864';ai.innerHTML='<b style="color:#252927">Syvora</b><br>I updated the preview. Tell me what you want to change next.';buildLog.appendChild(ai);buildLog.scrollTop=buildLog.scrollHeight},350)}
+function sendBuild(){const text=buildInput?.value.trim();if(text)appendBuild(text)}
+document.getElementById('buildSend')?.addEventListener('click',sendBuild);
+buildInput?.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendBuild()}});
+document.querySelectorAll('.build-chips button').forEach(b=>b.addEventListener('click',()=>{if(buildInput){buildInput.value=`Build me a ${b.textContent.toLowerCase()}`;buildInput.focus()}}));
 
-let projectCount=0;
-document.getElementById('newProjectBtn')?.addEventListener('click',()=>{projectCount++;const card=document.createElement('article');card.className='project-card';card.innerHTML=`<div><span class="project-mark blue">N${projectCount}</span><span class="mini-pill blue-pill">New</span></div><h3>New Project ${projectCount}</h3><p>A fresh Syvora project ready for planning, chat, code, files, and AI.</p><div class="project-meta"><span>0 tasks</span><span>1 member</span><b>0%</b></div><div class="bar"><i style="width:0%"></i></div>`;document.getElementById('projectCards')?.appendChild(card);notify('Project created')});
+// Project prototype.
+document.getElementById('newProjectBtn')?.addEventListener('click',()=>notify('New project flow comes in the functionality phase'));
+document.querySelector('.new-project-tile')?.addEventListener('click',()=>notify('New project flow comes in the functionality phase'));
 
+// Task checks.
+document.querySelectorAll('.task-stack input').forEach(input=>input.addEventListener('change',()=>{const row=input.closest('label');if(row)row.style.opacity=input.checked?'.45':'1'}));
+
+// Toggles.
 document.querySelectorAll('.toggle').forEach(t=>t.addEventListener('click',()=>t.classList.toggle('on')));
-document.querySelectorAll('input[type="checkbox"]').forEach(c=>c.addEventListener('change',()=>{const label=c.closest('label');if(label)label.style.opacity=c.checked?'.45':'1'}));
-document.querySelectorAll('.topbar .primary-button,.page-intro .primary-button').forEach(b=>{if(!b.dataset.pageLink)b.addEventListener('click',()=>notify('Functionality comes after the design phase'))});
 
-// subtle premium motion without changing the logo design
-const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'translateY(0)'}],{duration:420,easing:'cubic-bezier(.16,1,.3,1)',fill:'both'});observer.unobserve(e.target)}}),{threshold:.12});
-document.querySelectorAll('.quick-actions>button,.bento-card,.project-card,.kanban-col,.feature-grid article,.automation-card').forEach(el=>observer.observe(el));
+// Stage tabs / simple prototype states.
+document.querySelectorAll('.stage-tabs button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.stage-tabs button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');notify(`${btn.textContent.trim()} view selected`)}));
+document.querySelectorAll('.publish-button').forEach(b=>b.addEventListener('click',()=>notify('Publish will connect in the functionality phase')));
+document.querySelectorAll('.commit-button').forEach(b=>b.addEventListener('click',()=>notify('GitHub commit action will connect in the functionality phase')));
+
+// Small UI affordances.
+document.getElementById('newMenuButton')?.addEventListener('click',()=>notify('Create menu coming next'));
+document.querySelectorAll('.lab-card>button').forEach(b=>b.addEventListener('click',()=>notify('Labs are design prototypes for now')));
+document.querySelectorAll('.automation-create').forEach(b=>b.addEventListener('click',()=>notify('Automation builder comes in the functionality phase')));
+
 icons();
