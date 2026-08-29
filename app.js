@@ -3,6 +3,11 @@ emptyStyles.rel='stylesheet';
 emptyStyles.href='./empty-states.css?v=20260828-clean1';
 document.head.appendChild(emptyStyles);
 
+const chatStyles=document.createElement('link');
+chatStyles.rel='stylesheet';
+chatStyles.href='./chat-upgrade.css?v=20260828-chat2';
+document.head.appendChild(chatStyles);
+
 const pages=[...document.querySelectorAll('.page')];
 const navItems=[...document.querySelectorAll('.nav-item[data-page]')];
 const pageTitle=document.getElementById('pageTitle');
