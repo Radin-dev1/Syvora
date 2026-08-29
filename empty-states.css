@@ -21,7 +21,28 @@
 #page-build .browser-bar{height:38px;min-height:38px;flex:0 0 38px;border-bottom:1px solid var(--line);background:#f8fafc}
 #page-build .preview-empty{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px}
 
-@media(max-width:1100px){#page-build .builder-shell{grid-template-columns:minmax(260px,32%) minmax(0,1fr)}}
-@media(max-width:760px){#page-build{margin:-38px -40px -76px}#page-build.active{height:auto;min-height:calc(100vh - 58px);overflow:visible}#page-build .simple-header{padding:16px 18px}#page-build .builder-shell{grid-template-columns:1fr;grid-template-rows:320px minmax(520px,1fr);overflow:visible}#page-build .builder-shell>aside{border-right:0;border-bottom:1px solid var(--line)}#page-build .browser-preview{margin:10px}}
+/* Full-workspace layout for the rest of Syvora */
+#page-home,#page-projects,#page-studios,#page-code,#page-agents,#page-files,#page-automations{margin:-38px -40px -76px;min-height:calc(100vh - 58px);background:#f8fafc;padding:28px 30px 34px}
+#page-home.active,#page-projects.active,#page-studios.active,#page-code.active,#page-agents.active,#page-files.active,#page-automations.active{width:auto}
+#page-home .home-layout{max-width:none;width:100%;margin:0}
+#page-home .home-hero{width:100%;padding-top:18px}
+#page-home .studio-shortcuts,#page-home .dashboard-grid{width:100%}
+#page-studios .studios-header,#page-projects .simple-header,#page-code .simple-header,#page-agents .simple-header,#page-files .simple-header,#page-automations .simple-header{width:100%;max-width:none;margin:0 0 22px}
+#page-projects.active,#page-agents.active,#page-files.active,#page-automations.active{display:flex;flex-direction:column}
+#page-projects .page-empty,#page-agents .page-empty,#page-files .page-empty,#page-automations .page-empty{flex:1;min-height:0;margin-top:0}
+#page-projects .project-grid,#page-agents .agent-grid,#page-files .file-grid,#page-automations .automation-list{width:100%;max-width:none}
+#page-studios .featured-studios,#page-studios .studios-grid{width:100%;max-width:none}
+#page-code.active{display:flex;flex-direction:column}
+#page-code .code-shell{flex:1;width:100%;max-width:none;min-height:0;height:auto;margin:0;border-radius:16px;overflow:hidden}
+#page-code .editor{min-height:0}
 
-@media(max-width:900px){.honest-empty,.page-empty{min-height:260px;padding:30px 18px}.chat-team-empty{min-height:300px}}
+/* Existing full-page workspaces (AI + Team Chat) should truly fill the area too */
+#page-ai.full-page,#page-chat.full-page{min-height:calc(100vh - 58px);background:#f8fafc}
+#page-ai .workspace-shell,#page-chat .team-shell{min-height:calc(100vh - 58px);height:calc(100vh - 58px);width:100%}
+
+/* Use more of the viewport on large displays */
+@media(min-width:1500px){#page-home,#page-projects,#page-studios,#page-code,#page-agents,#page-files,#page-automations{padding-left:36px;padding-right:36px}.home-layout{max-width:none!important}}
+
+@media(max-width:1100px){#page-build .builder-shell{grid-template-columns:minmax(260px,32%) minmax(0,1fr)}}
+@media(max-width:900px){#page-home,#page-projects,#page-studios,#page-code,#page-agents,#page-files,#page-automations{margin:-38px -40px -76px;padding:22px 20px 28px}.honest-empty,.page-empty{min-height:260px;padding:30px 18px}.chat-team-empty{min-height:300px}}
+@media(max-width:760px){#page-build{margin:-38px -40px -76px}#page-build.active{height:auto;min-height:calc(100vh - 58px);overflow:visible}#page-build .simple-header{padding:16px 18px}#page-build .builder-shell{grid-template-columns:1fr;grid-template-rows:320px minmax(520px,1fr);overflow:visible}#page-build .builder-shell>aside{border-right:0;border-bottom:1px solid var(--line)}#page-build .browser-preview{margin:10px}}
