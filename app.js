@@ -8,6 +8,16 @@ chatStyles.rel='stylesheet';
 chatStyles.href='./chat-upgrade.css?v=20260828-chat2';
 document.head.appendChild(chatStyles);
 
+const localAIStyles=document.createElement('link');
+localAIStyles.rel='stylesheet';
+localAIStyles.href='./local-ai.css?v=20260828-local1';
+document.head.appendChild(localAIStyles);
+
+window.syvoraLocalAIReady=import('./local-ai.js?v=20260828-local1').catch(err=>{
+  console.error('Local AI failed to load',err);
+  return null;
+});
+
 const pages=[...document.querySelectorAll('.page')];
 const navItems=[...document.querySelectorAll('.nav-item[data-page]')];
 const pageTitle=document.getElementById('pageTitle');
@@ -15,7 +25,7 @@ const toast=document.getElementById('toast');
 const names={home:'Home',ai:'AI Chat',chat:'Team Chat',projects:'Projects',studios:'Studios',build:'App Builder',code:'Code Studio',agents:'Agents',files:'Files',automations:'Automations'};
 
 function icons(){if(window.lucide)window.lucide.createIcons()}
-function notify(text){if(!toast)return;toast.textContent=text;toast.classList.add('show');clearTimeout(notify.t);notify.t=setTimeout(()=>toast.classList.remove('show'),1900)}
+function notify(text){if(!toast)return;toast.textContent=text;toast.classList.add('show');clearTimeout(notify.t);notify.t=setTimeout(()=>toast.classList.remove('show'),2100)}
 function openPage(name,push=true){if(!names[name])name='home';pages.forEach(p=>p.classList.toggle('active',p.id===`page-${name}`));navItems.forEach(n=>n.classList.toggle('active',n.dataset.page===name));if(pageTitle)pageTitle.textContent=names[name];if(push)history.replaceState(null,'',name==='home'?location.pathname:`#${name}`);window.scrollTo({top:0,behavior:'smooth'});icons()}
 navItems.forEach(n=>n.addEventListener('click',()=>openPage(n.dataset.page)));
 document.querySelectorAll('[data-page-link]').forEach(el=>el.addEventListener('click',()=>openPage(el.dataset.pageLink)));
@@ -32,20 +42,113 @@ document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLower
 commandInput?.addEventListener('input',e=>{const q=e.target.value.toLowerCase();document.querySelectorAll('.command-list button').forEach(b=>b.style.display=b.textContent.toLowerCase().includes(q)?'flex':'none')});
 document.querySelectorAll('[data-command-page]').forEach(b=>b.addEventListener('click',()=>{openPage(b.dataset.commandPage);closeCommand()}));
 
+async function getLocalAI(){
+  await window.syvoraLocalAIReady;
+  if(!window.SyvoraLocalAI)throw new Error('The local AI module could not load. Check your internet connection and refresh.');
+  return window.SyvoraLocalAI;
+}
+
 const homePrompt=document.getElementById('homePrompt');
 const homeMode=document.getElementById('homeMode');
-function submitHome(){const text=homePrompt?.value.trim();if(!text){notify('Type something first');return}const mode=homeMode?.value||'Normal chat';if(mode==='Create mode'){openPage('studios');notify('Choose a Studio to create in')}else{openPage('ai');const chatMode=document.getElementById('chatMode');if(chatMode)chatMode.value=mode;appendMessage(text,'user');notify('AI backend is not connected yet')}if(homePrompt)homePrompt.value=''}
+async function submitHome(){
+  const text=homePrompt?.value.trim();
+  if(!text){notify('Type something first');return}
+  const mode=homeMode?.value||'Normal chat';
+  if(mode==='Create mode'){
+    openPage('studios');
+    notify('Choose a Studio');
+  }else{
+    openPage('ai');
+    const chatMode=document.getElementById('chatMode');
+    if(chatMode)chatMode.value=mode;
+    if(homePrompt)homePrompt.value='';
+    await sendChat(text);
+  }
+}
 document.getElementById('homeSend')?.addEventListener('click',submitHome);
 homePrompt?.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitHome()}});
 
 const messages=document.getElementById('messages');
 const chatInput=document.getElementById('chatInput');
+const chatHistory=[];
+let chatBusy=false;
 function clearEmpty(){messages?.querySelector('.empty-chat')?.remove()}
-function appendMessage(text,role='user'){if(!messages)return;clearEmpty();const row=document.createElement('div');row.className=`message ${role==='assistant'?'assistant':''}`;row.style.cssText='max-width:780px;width:100%;margin:8px auto;display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:flex-start';const avatar=document.createElement('div');avatar.style.cssText=`width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-weight:700;font-size:9px;${role==='assistant'?'background:#eaf5fd;color:#168eea':'background:#151a20;color:white'}`;avatar.innerHTML=role==='assistant'?'<i data-lucide="sparkles"></i>':'R';const bubble=document.createElement('div');bubble.style.cssText='font-size:10px;line-height:1.65;color:#4f5964;padding-top:2px';bubble.innerHTML=`<strong style="display:block;color:#1f252c;margin-bottom:3px">${role==='assistant'?'Syvora':'You'}</strong><p style="margin:0"></p>`;bubble.querySelector('p').textContent=text;row.append(avatar,bubble);messages.appendChild(row);messages.scrollTo({top:messages.scrollHeight,behavior:'smooth'});icons()}
-function sendChat(){const text=chatInput?.value.trim();if(!text)return;appendMessage(text,'user');chatInput.value='';notify('AI backend is not connected yet')}
-document.getElementById('chatSend')?.addEventListener('click',sendChat);
+function appendMessage(text,role='user',streaming=false){
+  if(!messages)return null;
+  clearEmpty();
+  const row=document.createElement('div');
+  row.className=`message ${role==='assistant'?'assistant':''}${streaming?' local-streaming':''}`;
+  const avatar=document.createElement('div');
+  avatar.className='message-avatar';
+  avatar.innerHTML=role==='assistant'?'<i data-lucide="sparkles"></i>':'R';
+  const body=document.createElement('div');
+  body.className='message-body';
+  const who=document.createElement('strong');
+  who.textContent=role==='assistant'?'Syvora':'You';
+  const p=document.createElement('p');
+  p.textContent=text;
+  body.append(who,p);
+  row.append(avatar,body);
+  messages.appendChild(row);
+  messages.scrollTo({top:messages.scrollHeight,behavior:'smooth'});
+  icons();
+  return {row,p,body};
+}
+function setChatDisabled(disabled){
+  chatBusy=disabled;
+  if(chatInput)chatInput.disabled=disabled;
+  const send=document.getElementById('chatSend');
+  if(send)send.disabled=disabled;
+}
+async function sendChat(overrideText){
+  const text=(overrideText??chatInput?.value??'').trim();
+  if(!text||chatBusy)return;
+  appendMessage(text,'user');
+  chatHistory.push({role:'user',content:text});
+  if(chatInput)chatInput.value='';
+  const assistant=appendMessage('Starting local AI…','assistant',true);
+  if(!assistant)return;
+  setChatDisabled(true);
+  try{
+    const ai=await getLocalAI();
+    const answer=await ai.generate(chatHistory,{
+      onProgress:status=>{if(!assistant.p.textContent||assistant.p.textContent==='Starting local AI…')assistant.p.textContent=status;},
+      onToken:full=>{
+        assistant.p.textContent=full;
+        messages.scrollTop=messages.scrollHeight;
+      }
+    });
+    assistant.row.classList.remove('local-streaming');
+    chatHistory.push({role:'assistant',content:answer});
+  }catch(err){
+    console.error(err);
+    assistant.row.classList.remove('local-streaming');
+    assistant.row.classList.add('local-model-error');
+    assistant.p.textContent=`Local AI could not start: ${err.message}`;
+  }finally{
+    setChatDisabled(false);
+    chatInput?.focus();
+  }
+}
+document.getElementById('chatSend')?.addEventListener('click',()=>sendChat());
 chatInput?.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat()}});
-document.getElementById('newChat')?.addEventListener('click',()=>{if(messages)messages.innerHTML='<div class="empty-chat"><img src="assets/syvora-logo.svg" alt="Syvora" /><h2>What do you want to work on?</h2><p>Ask anything, research the web, analyze files, write code, generate creative work, or use workspace context after you add it.</p><div class="starter-grid"><button><i data-lucide="telescope"></i><span><strong>Research a topic</strong><small>Search and compare sources</small></span></button><button><i data-lucide="code-2"></i><span><strong>Write or debug code</strong><small>Start from scratch or connect a repo</small></span></button><button data-open-studio="Image Studio"><i data-lucide="image"></i><span><strong>Create an image</strong><small>Open Image Studio</small></span></button><button><i data-lucide="file-text"></i><span><strong>Analyze files</strong><small>Upload a file first</small></span></button></div>';bindStudioOpeners();icons();notify('New empty chat started')});
+function bindStarterButtons(){
+  document.querySelectorAll('.starter-grid button:not([data-open-studio])').forEach(btn=>{
+    if(btn.dataset.localBound)return;
+    btn.dataset.localBound='1';
+    btn.addEventListener('click',()=>{
+      const title=btn.querySelector('strong')?.textContent||btn.textContent.trim();
+      if(chatInput){chatInput.value=title;chatInput.focus()}
+    });
+  });
+}
+bindStarterButtons();
+document.getElementById('newChat')?.addEventListener('click',async()=>{
+  chatHistory.length=0;
+  try{(await getLocalAI()).reset()}catch{}
+  if(messages)messages.innerHTML='<div class="empty-chat"><img src="assets/syvora-logo.svg" alt="Syvora" /><h2>What do you want to work on?</h2><p>Ask anything or write code with a local model running on your device.</p><div class="starter-grid"><button><i data-lucide="telescope"></i><span><strong>Explain a topic</strong><small>Ask the local model</small></span></button><button><i data-lucide="code-2"></i><span><strong>Write or debug code</strong><small>Use the local coding model</small></span></button><button data-open-studio="Image Studio"><i data-lucide="image"></i><span><strong>Create an image</strong><small>Open Image Studio</small></span></button><button><i data-lucide="lightbulb"></i><span><strong>Brainstorm ideas</strong><small>Generate ideas locally</small></span></button></div>';
+  bindStarterButtons();bindStudioOpeners();icons();
+});
 document.querySelectorAll('.toggle').forEach(t=>t.addEventListener('click',()=>t.classList.toggle('on')));
 
 const teamTextarea=document.querySelector('.team-composer textarea');
@@ -80,13 +183,93 @@ function closeStudio(){studioModal?.classList.remove('open');studioModal?.setAtt
 function bindStudioOpeners(){document.querySelectorAll('[data-open-studio]').forEach(el=>{if(el.dataset.bound)return;el.dataset.bound='1';el.addEventListener('click',e=>{e.stopPropagation();openStudio(el.dataset.openStudio)})})}
 bindStudioOpeners();
 document.getElementById('closeStudio')?.addEventListener('click',closeStudio);
-document.getElementById('studioGenerate')?.addEventListener('click',()=>{const text=studioPrompt?.value.trim();if(!text){notify('Describe what you want to create first');return}notify('Generation backend is not connected yet')});
+document.getElementById('studioGenerate')?.addEventListener('click',()=>{const text=studioPrompt?.value.trim();if(!text){notify('Describe what you want to create first');return}notify('This Studio needs its own local media model. Text/code AI is working now.')});
 document.querySelectorAll('.studio-tools button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.studio-tools button').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}));
 document.querySelectorAll('.studio-filter button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.studio-filter button').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}));
 
 const buildInput=document.getElementById('buildInput');
-document.getElementById('buildSend')?.addEventListener('click',()=>{if(!buildInput?.value.trim()){notify('Describe what you want to build first');return}notify('App generation backend is not connected yet')});
-buildInput?.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();document.getElementById('buildSend')?.click()}});
+const builderLog=document.querySelector('.builder-chat-log');
+const browserPreview=document.querySelector('#page-build .browser-preview');
+let generatedAppHTML='';
+let buildBusy=false;
+function appendBuildMessage(text,type='user'){
+  if(!builderLog)return null;
+  const div=document.createElement('div');
+  div.className=type==='user'?'builder-user-message':'builder-ai-message';
+  if(type!=='user')div.innerHTML='<strong>Syvora Local AI</strong><span></span>';
+  if(type==='user')div.textContent=text;else div.querySelector('span').textContent=text;
+  builderLog.appendChild(div);
+  builderLog.scrollTop=builderLog.scrollHeight;
+  return type==='user'?div:div.querySelector('span');
+}
+function renderGeneratedApp(html){
+  if(!browserPreview)return;
+  generatedAppHTML=html;
+  browserPreview.classList.add('has-generated-app');
+  browserPreview.querySelector('.preview-empty')?.remove();
+  let frame=browserPreview.querySelector('.generated-preview-frame');
+  if(!frame){
+    frame=document.createElement('iframe');
+    frame.className='generated-preview-frame';
+    frame.setAttribute('sandbox','allow-scripts allow-forms allow-modals allow-popups');
+    browserPreview.appendChild(frame);
+  }
+  frame.srcdoc=html;
+}
+function showGeneratedCode(){
+  if(!browserPreview||!generatedAppHTML)return notify('Generate an app first');
+  browserPreview.querySelector('.generated-preview-frame')?.remove();
+  browserPreview.querySelector('.generated-code-view')?.remove();
+  const pre=document.createElement('pre');
+  pre.className='generated-code-view';
+  pre.textContent=generatedAppHTML;
+  browserPreview.appendChild(pre);
+}
+function showGeneratedPreview(){
+  if(!generatedAppHTML)return;
+  browserPreview?.querySelector('.generated-code-view')?.remove();
+  renderGeneratedApp(generatedAppHTML);
+}
+async function sendBuild(){
+  const text=buildInput?.value.trim();
+  if(!text||buildBusy){if(!text)notify('Describe what you want to build first');return}
+  appendBuildMessage(text,'user');
+  buildInput.value='';
+  const status=appendBuildMessage('Preparing the local model…','assistant');
+  status?.parentElement?.classList.add('loading');
+  buildBusy=true;
+  if(buildInput)buildInput.disabled=true;
+  const send=document.getElementById('buildSend');if(send)send.disabled=true;
+  try{
+    const ai=await getLocalAI();
+    const html=await ai.buildApp(text,{
+      onProgress:s=>{if(status)status.textContent=s},
+      onToken:full=>{if(status)status.textContent=`Generating app locally… ${Math.max(1,Math.round(full.length/80))} chunks`}
+    });
+    if(!/<html[\s>]/i.test(html))throw new Error('The model did not return a complete HTML app. Try a simpler prompt.');
+    renderGeneratedApp(html);
+    if(status)status.textContent='App generated locally. You can preview it or open the Code tab.';
+    status?.parentElement?.classList.remove('loading');
+  }catch(err){
+    console.error(err);
+    if(status)status.textContent=`Could not generate the app: ${err.message}`;
+    status?.parentElement?.classList.remove('loading');
+    status?.parentElement?.classList.add('error');
+  }finally{
+    buildBusy=false;
+    if(buildInput)buildInput.disabled=false;
+    if(send)send.disabled=false;
+    buildInput?.focus();
+  }
+}
+document.getElementById('buildSend')?.addEventListener('click',sendBuild);
+buildInput?.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendBuild()}});
+document.querySelectorAll('#page-build .builder-toolbar button').forEach(btn=>btn.addEventListener('click',()=>{
+  const label=btn.textContent.trim().toLowerCase();
+  if(label==='preview'){document.querySelectorAll('#page-build .builder-toolbar button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');showGeneratedPreview()}
+  if(label==='code'){document.querySelectorAll('#page-build .builder-toolbar button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');showGeneratedCode()}
+  if(label==='visual edit')notify('Visual editing is next; the local AI generation and preview are working now.');
+}));
 
-document.querySelectorAll('.primary-button').forEach(btn=>{if(!btn.dataset.pageLink&&!['newChat'].includes(btn.id)&&!btn.closest('.studio-modal'))btn.addEventListener('click',()=>notify(`${btn.textContent.trim()} is not connected yet`))});
+document.querySelectorAll('.primary-button').forEach(btn=>{if(!btn.dataset.pageLink&&!['newChat'].includes(btn.id)&&!btn.closest('.studio-modal')&&!btn.closest('#page-build'))btn.addEventListener('click',()=>notify(`${btn.textContent.trim()} is not connected yet`))});
 icons();
